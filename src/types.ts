@@ -24,9 +24,12 @@ export type DiffInput = {
 };
 
 export type ExtensionConfig = {
+  provider: "openai" | "ollama";
   apiKey: string;
   model: string;
   useSelectionFirst: boolean;
+  ollamaModel: string;
+  ollamaBaseUrl: string;
 };
 
 export class AppError extends Error {

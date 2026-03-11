@@ -30,10 +30,26 @@
           "default": "",
           "markdownDescription": "OpenAI API key used to generate commit messages."
         },
+        "aiCommitMessageGenerator.provider": {
+          "type": "string",
+          "enum": ["ollama", "openai"],
+          "default": "ollama",
+          "markdownDescription": "AI provider used for commit message generation."
+        },
         "aiCommitMessageGenerator.model": {
           "type": "string",
           "default": "gpt-5-mini",
           "markdownDescription": "OpenAI model used for commit message generation."
+        },
+        "aiCommitMessageGenerator.ollamaModel": {
+          "type": "string",
+          "default": "qwen2.5-coder:7b",
+          "markdownDescription": "Ollama model used when the provider is set to ollama."
+        },
+        "aiCommitMessageGenerator.ollamaBaseUrl": {
+          "type": "string",
+          "default": "http://127.0.0.1:11434",
+          "markdownDescription": "Base URL for the local Ollama server."
         },
         "aiCommitMessageGenerator.useSelectionFirst": {
           "type": "boolean",

@@ -31,3 +31,16 @@ test("parseCommitResult falls back for malformed JSON", () => {
   const result = parseCommitResult("not-json", "docs update readme");
   assert.match(result.primary, /^(docs|chore): /);
 });
+
+test("parseCommitResult infers button additions from the diff", () => {
+  const diff = `
+diff --git a/src/components/Header.tsx b/src/components/Header.tsx
++++ b/src/components/Header.tsx
+@@ -10,0 +11,3 @@
++<button onClick={handleHello}>Hello</button>
++const label = "Hello";
+`;
+
+  const result = parseCommitResult("not-json", diff);
+  assert.match(result.primary, /^feat\(ui\): add hello button$/i);
+});
