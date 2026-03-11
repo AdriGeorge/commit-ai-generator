@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { parseCommitResult, sanitizeDiff } from "../ai";
+import { buildReadmePrompt } from "../prompt";
 
 test("sanitizeDiff rejects empty input", () => {
   assert.throws(() => sanitizeDiff("   "), /Select a git diff/);
@@ -43,4 +44,18 @@ diff --git a/src/components/Header.tsx b/src/components/Header.tsx
 
   const result = parseCommitResult("not-json", diff);
   assert.match(result.primary, /^feat\(ui\): add hello button$/i);
+});
+
+test("buildReadmePrompt includes update instructions when a README exists", () => {
+  const prompt = buildReadmePrompt("FILE: package.json\n{}", "# Existing");
+
+  assert.match(prompt, /update the existing README/);
+  assert.match(prompt, /Current README:/);
+});
+
+test("buildReadmePrompt includes repository snapshot", () => {
+  const prompt = buildReadmePrompt("FILE: src/extension.ts\nexport {}", null);
+
+  assert.match(prompt, /Repository snapshot:/);
+  assert.match(prompt, /src\/extension\.ts/);
 });

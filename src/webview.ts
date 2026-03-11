@@ -41,7 +41,7 @@ export function showResultsPanel(
 ): vscode.WebviewPanel {
   const panel = vscode.window.createWebviewPanel(
     "aiCommitMessageGenerator.results",
-    "AI Commit Message Generator",
+    "AI Git Assistant",
     vscode.ViewColumn.Beside,
     {
       enableScripts: true,
@@ -105,7 +105,7 @@ function getWebviewHtml(
         content="default-src 'none'; style-src ${webview.cspSource} 'unsafe-inline'; script-src 'nonce-${nonce}';"
       />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>AI Commit Message Generator</title>
+      <title>AI Git Assistant</title>
       <style>
         :root {
           color-scheme: light dark;
@@ -231,7 +231,7 @@ function getWebviewHtml(
     <body>
       <main>
         <section class="hero">
-          <span class="eyebrow">AI Commit Message Generator</span>
+          <span class="eyebrow">AI Git Assistant</span>
           <h1>Generated commit messages</h1>
           <p>Source: ${escapeHtml(source)} diff. Copy any suggestion or insert it into the active editor when possible.</p>
         </section>

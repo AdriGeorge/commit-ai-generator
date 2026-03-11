@@ -41,3 +41,36 @@ export function buildPrompt(diff: string): string {
     diff
   ].join("\n");
 }
+
+export function buildReadmePrompt(projectSummary: string, existingReadme: string | null): string {
+  const mode = existingReadme ? "update the existing README" : "create a new README";
+  const existingSection = existingReadme
+    ? [
+        "",
+        "Current README:",
+        existingReadme.length > 4000 ? `${existingReadme.slice(0, 4000)}\n...` : existingReadme
+      ].join("\n")
+    : "";
+
+  return [
+    "You are an expert software engineer writing a concise, accurate project README.",
+    "",
+    `Task: ${mode} based on the repository files below.`,
+    "",
+    "Rules:",
+    "- Return markdown only.",
+    "- Do not wrap the answer in code fences.",
+    "- Base every section on the provided project files.",
+    "- Do not invent features, scripts, commands, or architecture that are not present.",
+    "- Keep the tone practical and direct.",
+    "- Start with a title and a one-paragraph description.",
+    "- Include sections for Features, Setup or Usage, Commands, and Project Structure when supported by the codebase.",
+    "- Mention both OpenAI and Ollama only if the code actually supports them.",
+    "- If a README already exists, preserve useful details but fix omissions and outdated structure.",
+    "- Keep the README compact; avoid marketing language.",
+    "",
+    "Repository snapshot:",
+    projectSummary,
+    existingSection
+  ].join("\n");
+}

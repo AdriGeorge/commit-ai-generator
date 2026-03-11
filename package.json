@@ -1,7 +1,7 @@
 {
-  "name": "ai-commit-message-generator",
-  "displayName": "AI Commit Message Generator",
-  "description": "Generate conventional commit messages from a selected or staged git diff.",
+  "name": "ai-git-assistant",
+  "displayName": "AI Git Assistant",
+  "description": "Generate commit messages and create or update README files from your codebase.",
   "version": "0.1.0",
   "publisher": "local",
   "private": true,
@@ -12,34 +12,39 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:aiCommitMessageGenerator.generateCommitMessage"
+    "onCommand:aiCommitMessageGenerator.generateCommitMessage",
+    "onCommand:aiCommitMessageGenerator.generateReadme"
   ],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
       {
         "command": "aiCommitMessageGenerator.generateCommitMessage",
-        "title": "AI Commit Message: Generate"
+        "title": "AI Git Assistant: Generate Commit Message"
+      },
+      {
+        "command": "aiCommitMessageGenerator.generateReadme",
+        "title": "AI Git Assistant: Create or Update README"
       }
     ],
     "configuration": {
-      "title": "AI Commit Message Generator",
+      "title": "AI Git Assistant",
       "properties": {
         "aiCommitMessageGenerator.apiKey": {
           "type": "string",
           "default": "",
-          "markdownDescription": "OpenAI API key used to generate commit messages."
+          "markdownDescription": "OpenAI API key used to generate commit messages and README content."
         },
         "aiCommitMessageGenerator.provider": {
           "type": "string",
           "enum": ["ollama", "openai"],
           "default": "ollama",
-          "markdownDescription": "AI provider used for commit message generation."
+          "markdownDescription": "AI provider used for commit message and README generation."
         },
         "aiCommitMessageGenerator.model": {
           "type": "string",
           "default": "gpt-5-mini",
-          "markdownDescription": "OpenAI model used for commit message generation."
+          "markdownDescription": "OpenAI model used for commit message and README generation."
         },
         "aiCommitMessageGenerator.ollamaModel": {
           "type": "string",

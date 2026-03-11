@@ -1,10 +1,12 @@
-# AI Commit Message Generator
+# AI Git Assistant
 
-AI Commit Message Generator is a minimal VS Code extension that turns a selected git diff, or the staged diff from the current workspace, into conventional commit message suggestions using either OpenAI or Ollama.
+AI Git Assistant is a VS Code extension that can turn a selected git diff, or the staged diff from the current workspace, into conventional commit message suggestions and can also create or update a `README.md` by scanning the repository code.
 
 ## Preview
 
-![AI Commit Message Generator preview](./media/app-preview.svg)
+![AI Git Assistant commit message preview](./media/app-preview.svg)
+
+![AI Git Assistant README generation preview](./media/readme-preview.svg)
 
 ## What The Extension Does
 
@@ -17,6 +19,7 @@ AI Commit Message Generator is a minimal VS Code extension that turns a selected
 - Shows results in a focused webview panel
 - Supports copying any message
 - Supports inserting a message into the active editor when possible
+- Scans the workspace and creates or updates `README.md`
 
 ## How To Run In Extension Development Host
 
@@ -39,7 +42,13 @@ npm run compile
 5. In the Extension Development Host, open the Command Palette and run:
 
 ```text
-AI Commit Message: Generate
+AI Git Assistant: Generate Commit Message
+```
+
+To create or refresh project documentation from the current workspace, run:
+
+```text
+AI Git Assistant: Create or Update README
 ```
 
 ## Provider Setup
@@ -78,7 +87,7 @@ If you want to use OpenAI instead:
 ## Example Workflow
 
 1. Stage a set of changes in a git repository.
-2. Run `AI Commit Message: Generate`.
+2. Run `AI Git Assistant: Generate Commit Message`.
 3. The primary message is copied to the clipboard automatically.
 4. Review the primary suggestion, alternatives, and reasoning in the webview.
 5. Click `Insert` to place a message in the active editor when available, or `Copy` to place it on the clipboard.
@@ -101,8 +110,9 @@ If you want to use OpenAI instead:
 
 - `src/extension.ts`: command registration and orchestration
 - `src/git.ts`: staged diff lookup via `git diff --staged`
+- `src/project.ts`: repository scanning and README context collection
 - `src/ai.ts`: OpenAI/Ollama requests, validation, and safe parsing
-- `src/prompt.ts`: reusable prompt builder
+- `src/prompt.ts`: reusable commit and README prompt builders
 - `src/webview.ts`: webview rendering and message actions
 - `src/types.ts`: shared types and constants
 
@@ -111,5 +121,6 @@ If you want to use OpenAI instead:
 - Use a real git repository in the Extension Development Host.
 - Test with selected diff text first.
 - Test again with no selection and staged changes present.
+- Test README generation in a small and medium project to confirm the produced markdown matches the codebase.
 - Test Ollama with the local service running.
 - Test missing API key, no workspace, Ollama not running, and no staged changes to verify friendly error handling.

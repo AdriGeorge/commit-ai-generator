@@ -16,6 +16,12 @@ export type CommitResult = {
   reasoning: string;
 };
 
+export type ProjectSnapshot = {
+  summary: string;
+  fileCount: number;
+  truncated: boolean;
+};
+
 export type DiffSource = "selection" | "staged";
 
 export type DiffInput = {
@@ -41,6 +47,8 @@ export class AppError extends Error {
       | "git_missing"
       | "no_staged_changes"
       | "invalid_diff"
+      | "invalid_project"
+      | "readme_write_failed"
       | "ai_request_failed"
   ) {
     super(message);

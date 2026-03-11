@@ -1,0 +1,65 @@
+<svg width="1440" height="960" viewBox="0 0 1440 960" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="156" y1="96" x2="1264" y2="842" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#07111F"/>
+      <stop offset="1" stop-color="#0F172A"/>
+    </linearGradient>
+    <linearGradient id="paper" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#F8FAFC"/>
+      <stop offset="1" stop-color="#E2E8F0"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#38BDF8"/>
+      <stop offset="1" stop-color="#14B8A6"/>
+    </linearGradient>
+    <filter id="shadow" x="102" y="76" width="1236" height="822" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+      <feOffset dy="28"/>
+      <feGaussianBlur stdDeviation="34"/>
+      <feComposite in2="hardAlpha" operator="out"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0.00784314 0 0 0 0 0.0235294 0 0 0 0 0.0901961 0 0 0 0.45 0"/>
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_1"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_1" result="shape"/>
+    </filter>
+  </defs>
+
+  <rect width="1440" height="960" fill="#020617"/>
+  <circle cx="286" cy="142" r="220" fill="#22D3EE" fill-opacity="0.12"/>
+  <circle cx="1170" cy="802" r="280" fill="#14B8A6" fill-opacity="0.10"/>
+
+  <g filter="url(#shadow)">
+    <rect x="170" y="118" width="1100" height="686" rx="30" fill="url(#bg)"/>
+    <rect x="170.5" y="118.5" width="1099" height="685" rx="29.5" stroke="#334155"/>
+
+    <rect x="208" y="154" width="188" height="36" rx="18" fill="#0B2534"/>
+    <text x="232" y="177" fill="#CFFAFE" font-family="Arial, sans-serif" font-size="14" letter-spacing="2.1">AI GIT ASSISTANT</text>
+
+    <text x="208" y="244" fill="#E5EEFB" font-family="Arial, sans-serif" font-size="42" font-weight="700">README generation from repository context</text>
+    <text x="208" y="286" fill="#9FB0C9" font-family="Arial, sans-serif" font-size="22">The assistant reads key project files, preserves useful details, and rewrites the markdown in place.</text>
+
+    <rect x="208" y="330" width="470" height="418" rx="24" fill="#0D1628" stroke="#334155"/>
+    <text x="236" y="372" fill="#9FB0C9" font-family="Arial, sans-serif" font-size="16" font-weight="700" letter-spacing="1.5">PROJECT SNAPSHOT</text>
+    <text x="236" y="420" fill="#E5EEFB" font-family="Courier New, monospace" font-size="18">FILE: package.json</text>
+    <text x="236" y="454" fill="#94A3B8" font-family="Courier New, monospace" font-size="16">"displayName": "AI Git Assistant"</text>
+    <text x="236" y="482" fill="#94A3B8" font-family="Courier New, monospace" font-size="16">"scripts": { "compile": "tsc -p ./" }</text>
+    <text x="236" y="530" fill="#E5EEFB" font-family="Courier New, monospace" font-size="18">FILE: src/extension.ts</text>
+    <text x="236" y="564" fill="#94A3B8" font-family="Courier New, monospace" font-size="16">registerCommand("...generateReadme")</text>
+    <text x="236" y="592" fill="#94A3B8" font-family="Courier New, monospace" font-size="16">createProjectSnapshot(root)</text>
+    <text x="236" y="620" fill="#94A3B8" font-family="Courier New, monospace" font-size="16">writeFile(readmePath, nextReadme)</text>
+
+    <rect x="706" y="330" width="526" height="418" rx="24" fill="url(#paper)"/>
+    <rect x="706.5" y="330.5" width="525" height="417" rx="23.5" stroke="#CBD5E1"/>
+    <rect x="738" y="360" width="192" height="34" rx="17" fill="url(#accent)"/>
+    <text x="768" y="382" fill="#06202A" font-family="Arial, sans-serif" font-size="14" font-weight="700">README.md</text>
+    <text x="738" y="440" fill="#0F172A" font-family="Arial, sans-serif" font-size="28" font-weight="700"># AI Git Assistant</text>
+    <text x="738" y="480" fill="#334155" font-family="Arial, sans-serif" font-size="18">Generate conventional commit messages and</text>
+    <text x="738" y="506" fill="#334155" font-family="Arial, sans-serif" font-size="18">create or update project README files.</text>
+    <text x="738" y="560" fill="#0F172A" font-family="Arial, sans-serif" font-size="20" font-weight="700">## Features</text>
+    <text x="738" y="594" fill="#475569" font-family="Arial, sans-serif" font-size="18">- Commit suggestions from selected or staged diffs</text>
+    <text x="738" y="624" fill="#475569" font-family="Arial, sans-serif" font-size="18">- README creation and refresh from source files</text>
+    <text x="738" y="654" fill="#475569" font-family="Arial, sans-serif" font-size="18">- OpenAI and Ollama provider support</text>
+    <text x="738" y="706" fill="#0F172A" font-family="Arial, sans-serif" font-size="20" font-weight="700">## Commands</text>
+    <text x="738" y="738" fill="#475569" font-family="Arial, sans-serif" font-size="18">AI Git Assistant: Generate Commit Message</text>
+  </g>
+</svg>

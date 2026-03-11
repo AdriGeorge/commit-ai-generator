@@ -1,22 +1,10 @@
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import * as vscode from "vscode";
+import { getWorkspaceRoot } from "./project";
 import { AppError, type DiffInput } from "./types";
 
 const execFileAsync = promisify(execFile);
-
-function getWorkspaceRoot(): string {
-  const folder = vscode.workspace.workspaceFolders?.[0];
-
-  if (!folder) {
-    throw new AppError(
-      "Open a workspace folder before generating a commit message from staged changes.",
-      "no_workspace"
-    );
-  }
-
-  return folder.uri.fsPath;
-}
 
 export function getSelectedDiff(): DiffInput | null {
   const editor = vscode.window.activeTextEditor;

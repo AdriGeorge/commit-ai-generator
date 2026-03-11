@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import { buildPrompt } from "./prompt";
+import { buildPrompt, buildReadmePrompt } from "./prompt";
 import { ALLOWED_TYPES, AppError, type CommitResult, type ExtensionConfig } from "./types";
 
 const MIN_DIFF_LENGTH = 20;
@@ -11,6 +11,10 @@ const commitLinePattern = new RegExp(
   `(${ALLOWED_TYPES.join("|")})(\\([^)]+\\))?:\\s+[^\\n.]{1,72}`,
   "gi"
 );
+
+type OllamaGenerateResponse = {
+  response?: string;
+};
 
 export function sanitizeDiff(diff: string): string {
   const trimmed = diff.trim();
@@ -42,10 +46,6 @@ function normalizeJson(raw: string): string {
   }
 
   return raw.trim();
-}
-
-function isValidMessage(value: unknown): value is string {
-  return typeof value === "string" && commitPattern.test(value.trim());
 }
 
 function normalizeMessage(raw: string): string | null {
@@ -207,6 +207,21 @@ function salvageMessages(raw: string): string[] {
     .filter((value): value is string => Boolean(value));
 }
 
+function sanitizeReadme(raw: string): string {
+  const trimmed = raw.trim();
+
+  if (!trimmed) {
+    throw new AppError("The AI provider returned an empty README.", "ai_request_failed");
+  }
+
+  const unfenced = trimmed.replace(/^```(?:markdown|md)?\s*/i, "").replace(/\s*```$/, "").trim();
+  if (!unfenced.startsWith("#")) {
+    return `# Project README\n\n${unfenced}`;
+  }
+
+  return unfenced;
+}
+
 export function parseCommitResult(raw: string, diff: string): CommitResult {
   try {
     const parsed = JSON.parse(normalizeJson(raw)) as Partial<CommitResult>;
@@ -276,6 +291,20 @@ export async function generateCommitMessages(
   return generateWithOllama(sanitizedDiff, config);
 }
 
+export async function generateReadmeContent(
+  projectSummary: string,
+  existingReadme: string | null,
+  config: ExtensionConfig
+): Promise<string> {
+  const prompt = buildReadmePrompt(projectSummary, existingReadme);
+
+  if (config.provider === "openai") {
+    return generateReadmeWithOpenAI(prompt, config);
+  }
+
+  return generateReadmeWithOllama(prompt, config);
+}
+
 async function generateWithOpenAI(
   diff: string,
   config: ExtensionConfig
@@ -301,10 +330,6 @@ async function generateWithOpenAI(
     throw new AppError(`AI request failed: ${message}`, "ai_request_failed");
   }
 }
-
-type OllamaGenerateResponse = {
-  response?: string;
-};
 
 async function generateWithOllama(
   diff: string,
@@ -356,6 +381,86 @@ async function generateWithOllama(
     }
 
     return parseCommitResult(payload.response, diff);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "The Ollama request failed.";
+
+    if (
+      message.includes("ECONNREFUSED") ||
+      message.includes("fetch failed") ||
+      message.includes("ENOTFOUND")
+    ) {
+      throw new AppError(
+        "Could not reach Ollama. Start Ollama and verify aiCommitMessageGenerator.ollamaBaseUrl.",
+        "ai_request_failed"
+      );
+    }
+
+    throw new AppError(`AI request failed: ${message}`, "ai_request_failed");
+  }
+}
+
+async function generateReadmeWithOpenAI(
+  prompt: string,
+  config: ExtensionConfig
+): Promise<string> {
+  if (!config.apiKey.trim()) {
+    throw new AppError(
+      "Set aiCommitMessageGenerator.apiKey in VS Code settings before generating a README.",
+      "missing_api_key"
+    );
+  }
+
+  const client = new OpenAI({ apiKey: config.apiKey });
+
+  try {
+    const response = await client.responses.create({
+      model: config.model || "gpt-5-mini",
+      input: prompt
+    });
+
+    return sanitizeReadme(response.output_text);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "The OpenAI request failed.";
+    throw new AppError(`AI request failed: ${message}`, "ai_request_failed");
+  }
+}
+
+async function generateReadmeWithOllama(
+  prompt: string,
+  config: ExtensionConfig
+): Promise<string> {
+  const baseUrl = config.ollamaBaseUrl.replace(/\/+$/, "");
+  const model = config.ollamaModel || "qwen2.5-coder:7b";
+
+  try {
+    const response = await fetch(`${baseUrl}/api/generate`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model,
+        system:
+          "You write accurate, concise markdown README files from repository context. Do not invent features.",
+        prompt,
+        stream: false,
+        options: {
+          temperature: 0.2
+        }
+      })
+    });
+
+    if (!response.ok) {
+      const body = await response.text();
+      throw new Error(`Ollama returned ${response.status}: ${body}`);
+    }
+
+    const payload = (await response.json()) as OllamaGenerateResponse;
+    if (!payload.response) {
+      throw new Error("Ollama returned an empty response body.");
+    }
+
+    return sanitizeReadme(payload.response);
   } catch (error) {
     const message = error instanceof Error ? error.message : "The Ollama request failed.";
 
